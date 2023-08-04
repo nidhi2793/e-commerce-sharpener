@@ -2,61 +2,52 @@ import React from "react";
 import classes from "./Cart.module.css";
 import { Button } from "react-bootstrap";
 import Modal from "../UI/Modal";
+import { useContext } from "react";
+import CartContext from "./store/CartContext";
+import CartItem from "./CartItem";
 
-const cartElements = (
-  <ul className={classes["cart-items"]}>
-    {[
-      {
-        title: "Colors",
+const Cart = (props) => {
+  const CartCntxt = useContext(CartContext);
 
-        price: 100,
+  const totalAmount = CartCntxt.totalAmount.toFixed(2);
 
-        imageUrl:
-          "https://prasadyash2411.github.io/ecom-website/img/Album%201.png",
+  const cartItemRemoveHandler = (id) => {};
+  const cartItemAddHandler = (product) => {};
 
-        quantity: 2,
-      },
+  const cartElements = (
+    <ul className={classes["cart-items"]}>
+      {CartCntxt.products.map((product) => (
+        <CartItem
+          key={product.title}
+          title={product.title}
+          amount={product.amount}
+          price={product.price}
+          id={product.title}
+          onRemove={cartItemRemoveHandler.bind(null, product.id)}
+          onAdd={cartItemAddHandler.bind(null, product)}
+        />
+      ))}
+    </ul>
+  );
 
-      {
-        title: "Black and white Colors",
+  const hasItem = CartCntxt.products.length > 0;
 
-        price: 50,
-
-        imageUrl:
-          "https://prasadyash2411.github.io/ecom-website/img/Album%202.png",
-
-        quantity: 3,
-      },
-
-      {
-        title: "Yellow and Black Colors",
-
-        price: 70,
-
-        imageUrl:
-          "https://prasadyash2411.github.io/ecom-website/img/Album%203.png",
-
-        quantity: 1,
-      },
-    ].map((item) => (
-      <li>{item.title}</li>
-    ))}
-  </ul>
-);
-
-const Cart = () => {
   return (
     <Modal>
       {cartElements}
       <div className={classes.total}>
         <span>Total Amount</span>
-        <span>500</span>
+        <span>Rs {totalAmount}</span>
       </div>
       <div className={classes.actions}>
-        <Button variant="danger" style={{ marginRight: 5 }}>
+        <Button
+          variant="danger"
+          style={{ marginRight: 5 }}
+          onClick={props.onHideCart}
+        >
           Close
         </Button>
-        <Button variant="primary">Order</Button>
+        {hasItem && <Button variant="primary">Order</Button>}
       </div>
     </Modal>
   );
