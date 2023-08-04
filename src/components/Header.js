@@ -1,12 +1,16 @@
-import { Button } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
+import HeaderCartButton from "./HeaderCartBurtton";
 
-function Header({ onClick }) {
+function Header(props) {
   return (
-    <Navbar expand="lg" bg="dark" data-bs-theme="dark">
+    <Navbar
+      expand="lg"
+      bg="dark"
+      data-bs-theme="dark"
+      style={{ marginBottom: 30 }}
+    >
       <Container>
         <Navbar.Brand href="#home">The Generics</Navbar.Brand>
         <Nav className="justify-content-center">
@@ -15,9 +19,7 @@ function Header({ onClick }) {
           <Nav.Link href="#About">About</Nav.Link>
         </Nav>
         <Nav className="justify-content-end">
-          <Button variant="outline-primary" onClick={onClick}>
-            Cart
-          </Button>
+          <HeaderCartButton onClick={props.onShowCart} />
         </Nav>
       </Container>
     </Navbar>
