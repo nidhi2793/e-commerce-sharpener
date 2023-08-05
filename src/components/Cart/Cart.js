@@ -1,9 +1,9 @@
 import React from "react";
 import classes from "./Cart.module.css";
 import { Button } from "react-bootstrap";
-import Modal from "../UI/Modal";
+import Modal from "../../UI/Modal";
 import { useContext } from "react";
-import CartContext from "./store/CartContext";
+import CartContext from "../store/CartContext";
 import CartItem from "./CartItem";
 
 const Cart = (props) => {
@@ -11,8 +11,12 @@ const Cart = (props) => {
 
   const totalAmount = CartCntxt.totalAmount.toFixed(2);
 
-  const cartItemRemoveHandler = (id) => {};
-  const cartItemAddHandler = (product) => {};
+  const cartItemRemoveHandler = (id) => {
+    CartCntxt.removeItem(id);
+  };
+  const cartItemAddHandler = (product) => {
+    CartCntxt.addItem({ ...product, amount: 1 });
+  };
 
   const cartElements = (
     <ul className={classes["cart-items"]}>

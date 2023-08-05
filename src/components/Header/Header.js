@@ -9,14 +9,14 @@ function Header(props) {
       expand="lg"
       bg="dark"
       data-bs-theme="dark"
-      style={{ marginBottom: 30 }}
+      // style={{ marginBottom: 30 }}
     >
       <Container>
         <Navbar.Brand href="#home">The Generics</Navbar.Brand>
         <Nav className="justify-content-center">
-          <Nav.Link href="#home">Home</Nav.Link>
-          <Nav.Link href="#Store">Store</Nav.Link>
-          <Nav.Link href="#About">About</Nav.Link>
+          <Nav.Link href="/home">Home</Nav.Link>
+          <Nav.Link href="/store">Store</Nav.Link>
+          <Nav.Link href="/about">About</Nav.Link>
         </Nav>
         <Nav className="justify-content-end">
           <HeaderCartButton onClick={props.onShowCart} />

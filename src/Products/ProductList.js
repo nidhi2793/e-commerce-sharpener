@@ -1,8 +1,8 @@
 import React from "react";
-import { Container, Card, Row, Col, Button } from "react-bootstrap";
+import { Container, Row } from "react-bootstrap";
 import productsArr from "./data";
 
-import Product from "../components/Product";
+import Product from "./Product";
 
 const ProductList = (props) => {
   const ProductItems = productsArr.map((product) => (

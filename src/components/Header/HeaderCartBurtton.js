@@ -2,7 +2,7 @@ import { GrCart } from "react-icons/gr";
 import classes from "./HeaderCartButton.module.css";
 import { Fragment } from "react";
 import { useContext } from "react";
-import CartContext from "./store/CartContext";
+import CartContext from "../store/CartContext";
 
 function HeaderCartButton(props) {
   const cartCntxt = useContext(CartContext);
