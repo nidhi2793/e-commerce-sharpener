@@ -5,16 +5,11 @@ import HeaderCartButton from "./HeaderCartBurtton";
 
 function Header(props) {
   return (
-    <Navbar
-      expand="lg"
-      bg="dark"
-      data-bs-theme="dark"
-      // style={{ marginBottom: 30 }}
-    >
+    <Navbar expand="lg" bg="dark" data-bs-theme="dark">
       <Container>
-        <Navbar.Brand href="#home">The Generics</Navbar.Brand>
-        <Nav className="justify-content-center">
-          <Nav.Link href="/home">Home</Nav.Link>
+        <Navbar.Brand href="/">The Generics</Navbar.Brand>
+        <Nav className="justify-content-center " variant="underline">
+          <Nav.Link href="/">Home</Nav.Link>
           <Nav.Link href="/store">Store</Nav.Link>
           <Nav.Link href="/about">About</Nav.Link>
         </Nav>

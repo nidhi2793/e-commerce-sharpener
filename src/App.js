@@ -13,6 +13,7 @@ import Cart from "./components/Cart/Cart";
 import { useState } from "react";
 import CartProvider from "./components/store/CartProvider";
 import About from "./components/Pages/About";
+import Home from "./components/Pages/Home";
 
 function App() {
   const [cartShown, setCartShown] = useState(false);
@@ -32,6 +33,7 @@ function App() {
         <Header onShowCart={showCartHandler} />
 
         <Routes>
+          <Route path="/" Component={Home} exact />
           <Route path="/about" Component={About} />
           <Route path="/store" Component={ProductList} />
         </Routes>
