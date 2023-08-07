@@ -15,6 +15,7 @@ import CartProvider from "./components/store/CartProvider";
 import About from "./components/Pages/About";
 import Home from "./components/Pages/Home";
 import Contact from "./components/Pages/Contact";
+import AuthForm from "./components/Pages/AuthForm";
 
 function App() {
   const [cartShown, setCartShown] = useState(false);
@@ -37,7 +38,8 @@ function App() {
           <Route path="/" Component={Home} exact />
           <Route path="/about" Component={About} />
           <Route path="/store" Component={ProductList} />
-          <Route path="/contact" Component={Contact} />
+          <Route path="/contactus" Component={Contact} />
+          <Route path="/auth" Component={AuthForm} />
         </Routes>
       </CartProvider>
     </BrowserRouter>
