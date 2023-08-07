@@ -15,7 +15,7 @@ const ProductList = (props) => {
   ));
 
   return (
-    <Container>
+    <Container style={{ margin: 20 }}>
       <Row xs={1} lg={2} className="g-4">
         {ProductItems}
       </Row>
