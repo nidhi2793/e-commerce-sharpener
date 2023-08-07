@@ -3,72 +3,136 @@ import classes from "./AuthForm.module.css";
 import { useRef, useState } from "react";
 import AuthContext from "../store/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { CardContent } from "@mui/material";
+import CartContext from "../store/CartContext";
 
 const AuthForm = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
   const navigate = useNavigate();
-  const [isLogin, setIsLogin] = useState(true);
+  const CartCntxt = useContext(CartContext);
+  const [hasAccount, sethasAccount] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const authCntxt = useContext(AuthContext);
 
   const switchAuthModeHandler = () => {
-    setIsLogin((prevState) => !prevState);
+    sethasAccount((prevState) => !prevState);
   };
   const submitHandler = (event) => {
     event.preventDefault();
     const enteredEmail = emailRef.current.value;
     const enteredPassword = passwordRef.current.value;
+    const emailForCrud = enteredEmail.replace("@", "").replace(".", "");
     setIsLoading(true);
     setError(null);
     let url;
-    if (isLogin) {
+    if (hasAccount) {
       url =
         "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBKXBlY_x7fR9fr1yNqArjEAAmon0uKTvQ";
+      fetch(url, {
+        method: "POST",
+        body: JSON.stringify({
+          email: enteredEmail,
+          password: enteredPassword,
+          returnSecureToken: true,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => {
+          setIsLoading(false);
+          if (res.ok) {
+            return res.json();
+          } else {
+            return res.json().then((data) => {
+              let errorMessage = "Authentication Failed";
+
+              throw new Error(errorMessage);
+            });
+          }
+        })
+        .then((data) => {
+          authCntxt.login(data.idToken, data.email);
+          navigate("/store");
+        })
+        .catch((err) => {
+          alert(err.message);
+        });
+
+      emailRef.current.value = "";
+      passwordRef.current.value = "";
     } else {
       url =
         "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBKXBlY_x7fR9fr1yNqArjEAAmon0uKTvQ";
-    }
-    fetch(url, {
-      method: "POST",
-      body: JSON.stringify({
-        email: enteredEmail,
-        password: enteredPassword,
-        returnSecureToken: true,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        setIsLoading(false);
-        if (res.ok) {
-          return res.json();
-        } else {
-          return res.json().then((data) => {
-            let errorMessage = "Authentication Failed";
+      fetch(url, {
+        method: "POST",
+        body: JSON.stringify({
+          email: enteredEmail,
+          password: enteredPassword,
+          returnSecureToken: true,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => {
+          setIsLoading(false);
+          if (res.ok) {
+            return res.json();
+          } else {
+            return res.json().then((data) => {
+              let errorMessage = "Authentication Failed";
 
-            throw new Error(errorMessage);
-          });
+              throw new Error(errorMessage);
+            });
+          }
+        })
+        .then((data) => {
+          authCntxt.login(data.idToken, data.email);
+          navigate("/store");
+        })
+        .catch((err) => {
+          alert(err.message);
+        });
+
+      let cart = {};
+      fetch(
+        `https://crudcrud.com/api/61288f0e202d47d2b0fcf8b682a5f08c/cart${emailForCrud}`,
+        {
+          method: "POST",
+          body: JSON.stringify(cart),
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-      })
-      .then((data) => {
-        authCntxt.login(data.idToken);
-        navigate("/store");
-      })
-      .catch((err) => {
-        alert(err.message);
-      });
+      )
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
 
-    emailRef.current.value = "";
-    passwordRef.current.value = "";
+      fetch(
+        `https://ecommerce-6d42b-default-rtdb.firebaseio.com/cart/${emailForCrud}.json`,
+        {
+          method: "POST",
+          body: JSON.stringify(cart),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
+
+      emailRef.current.value = "";
+      passwordRef.current.value = "";
+    }
   };
 
   return (
     <section className={classes.auth}>
-      <h1>{isLogin ? "Login" : "Sign Up"}</h1>
+      <h1>{hasAccount ? "Login" : "Sign Up"}</h1>
       <form onSubmit={submitHandler}>
         <div className={classes.control}>
           <label htmlFor="email">Your Email</label>
@@ -80,7 +144,7 @@ const AuthForm = () => {
         </div>
         <div className={classes.actions}>
           {!isLoading && error === null && (
-            <button>{isLogin ? "Login" : "Create Account"}</button>
+            <button>{hasAccount ? "Login" : "Create Account"}</button>
           )}
           {!isLoading && error && <p>{error}</p>}
           {isLoading && <p>Loading...</p>}
@@ -89,7 +153,7 @@ const AuthForm = () => {
             className={classes.toggle}
             onClick={switchAuthModeHandler}
           >
-            {isLogin ? "Create new account" : "Login with existing account"}
+            {hasAccount ? "Create new account" : "Login with existing account"}
           </button>
         </div>
       </form>

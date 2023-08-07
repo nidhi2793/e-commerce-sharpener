@@ -44,7 +44,7 @@ function App() {
             path="/store"
             element={
               authCntxt.isLoggedIn ? (
-                { ProductList }
+                <ProductList />
               ) : (
                 <Navigate to="/auth" replace></Navigate>
               )

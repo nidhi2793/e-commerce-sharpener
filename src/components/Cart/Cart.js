@@ -14,8 +14,8 @@ const Cart = (props) => {
   const cartItemRemoveHandler = (id) => {
     CartCntxt.removeItem(id);
   };
-  const cartItemAddHandler = (product) => {
-    CartCntxt.addItem({ ...product, amount: 1 });
+  const cartItemAddHandler = async (product) => {
+    await CartCntxt.addItem({ ...product, amount: 1 });
   };
 
   const cartElements = (

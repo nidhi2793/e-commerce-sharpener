@@ -6,13 +6,17 @@ import { NavLink, useNavigate } from "react-router-dom";
 import "./Header.css";
 import { useContext } from "react";
 import AuthContext from "../store/AuthContext";
+import CartContext from "../store/CartContext";
 
 function Header(props) {
   const authCntxt = useContext(AuthContext);
+  const CartCntxt = useContext(CartContext);
+
   const navigate = useNavigate();
   const logoutHandler = () => {
     authCntxt.logout();
     navigate("/");
+    CartCntxt.clearCart();
   };
 
   return (

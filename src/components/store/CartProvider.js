@@ -1,35 +1,24 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import CartContext from "./CartContext";
 import { useReducer } from "react";
+import AuthContext from "./AuthContext";
 
-const defaultCartState = {
+let defaultCartState = {
   products: [],
   totalAmount: 0,
 };
 
 const CartReducer = (state, action) => {
   if (action.type === "ADD") {
-    const updatedAmount =
-      state.totalAmount + action.product.price * action.product.amount;
-    const existingCartItemIndex = state.products.findIndex(
-      (product) => product.id === action.product.id
-    );
-    const existingCartItem = state.products[existingCartItemIndex];
-    let updatedItems;
-
-    if (existingCartItem) {
-      const updatedItem = {
-        ...existingCartItem,
-        amount: existingCartItem.amount + action.product.amount,
-      };
-      updatedItems = [...state.products];
-      updatedItems[existingCartItemIndex] = updatedItem;
-    } else {
-      updatedItems = state.products.concat(action.product);
-    }
     return {
-      products: updatedItems,
-      totalAmount: updatedAmount,
+      products: action.products,
+      totalAmount: action.totalAmount,
+    };
+  }
+  if (action.type === "CLEAR") {
+    return {
+      products: action.products,
+      totalAmount: action.totalAmount,
     };
   }
   if (action.type === "REMOVE") {
@@ -58,16 +47,82 @@ const CartReducer = (state, action) => {
 };
 
 const CartProvider = (props) => {
+  const authCntxt = useContext(AuthContext);
+  const emailForCrud = authCntxt.email.replace("@", "").replace(".", "");
+
   const [cartState, dispatchCartAction] = useReducer(
     CartReducer,
     defaultCartState
   );
 
-  const addItemToCartHandler = (product) => {
-    dispatchCartAction({ type: "ADD", product: product });
+  useEffect(() => {
+    const setDefaultValue = async () => {
+      await fetch(
+        `https://ecommerce-6d42b-default-rtdb.firebaseio.com/cart/${emailForCrud}.json`
+      )
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          dispatchCartAction({
+            type: "ADD",
+            products: data?.products || [],
+            totalAmount: data?.totalAmount || 0,
+          });
+          console.log(data);
+        })
+        .catch((err) => console.log(err));
+    };
+    if (emailForCrud) {
+      setDefaultValue();
+    }
+  }, [emailForCrud]);
+
+  const addItemToCartHandler = async (product) => {
+    const updatedAmount =
+      cartState.totalAmount + product.price * product.amount;
+    const existingCartItemIndex = cartState.products.findIndex(
+      ({ id }) => id === product.id
+    );
+    const existingCartItem = cartState.products[existingCartItemIndex];
+    let updatedItems;
+
+    if (existingCartItem) {
+      const updatedItem = {
+        ...existingCartItem,
+        amount: existingCartItem.amount + product.amount,
+      };
+      updatedItems = [...cartState.products];
+      updatedItems[existingCartItemIndex] = updatedItem;
+    } else {
+      updatedItems = cartState.products.concat(product);
+    }
+    dispatchCartAction({
+      type: "ADD",
+      products: updatedItems,
+      totalAmount: updatedAmount,
+    });
+    await fetch(
+      `https://ecommerce-6d42b-default-rtdb.firebaseio.com/cart/${emailForCrud}.json`,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          products: updatedItems,
+          totalAmount: updatedAmount,
+        }),
+      }
+    )
+      .then((res) => {
+        return res.json();
+      })
+      .catch((err) => console.log(err));
   };
   const removeItemToCartHandler = (id) => {
     dispatchCartAction({ type: "REMOVE", id: id });
+  };
+
+  const clearCartHandler = () => {
+    dispatchCartAction({ type: "CLEAR", products: [], totalAmount: 0 });
   };
 
   const cartContext = {
@@ -75,6 +130,7 @@ const CartProvider = (props) => {
     totalAmount: cartState.totalAmount,
     addItem: addItemToCartHandler,
     removeItem: removeItemToCartHandler,
+    clearCart: clearCartHandler,
   };
 
   return (

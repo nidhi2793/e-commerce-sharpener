@@ -3,7 +3,7 @@
     width: 95%;
     max-width: 25rem;
     border-radius: 6px;
-    background-color: #03022a;
+    background-color:darkgray;
     box-shadow: 0 1px 4px rgba(3, 1, 53, 0.2);
     padding: 1rem;
     text-align: center;
@@ -11,7 +11,7 @@
   
   .auth h1 {
     text-align: center;
-    color: white;
+    color: rgb(255, 255, 255);
   }
   
   .control {
@@ -27,7 +27,7 @@
   
   .control input {
     font: inherit;
-    background-color: #f1e1fc;
+    background-color: lightgray;
     color: #0d015c;
     border-radius: 4px;
     border: 1px solid white;
@@ -47,7 +47,7 @@
     cursor: pointer;
     font: inherit;
     color: white;
-    background-color: #6f5ccc;
+    background-color: rgb(60, 60, 244);
     border: 1px solid #6f5ccc;
     border-radius: 4px;
     padding: 0.5rem 2.5rem;

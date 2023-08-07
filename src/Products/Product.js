@@ -6,8 +6,8 @@ import CartContext from "../components/store/CartContext";
 const Product = (props) => {
   const CartCtx = useContext(CartContext);
 
-  const handleAddToCart = () => {
-    CartCtx.addItem({
+  const handleAddToCart = async () => {
+    await CartCtx.addItem({
       title: props.title,
       price: props.price,
       amount: 1,
